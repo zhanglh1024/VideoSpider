@@ -1,0 +1,25 @@
+{
+	"comment": "",
+	"ignore": "test",
+	"package": [
+		{
+			"checksumSHA1": "OFWtMaBtJpjE57oyJ4Msddt6B5Y=",
+			"path": "github.com/gocolly/colly",
+			"revision": "d360e4bd7c2735a0349af154d1857b22cb84f492",
+			"revisionTime": "2019-05-23T15:02:45Z"
+		},
+		{
+			"checksumSHA1": "WZhkyHxMX6IhAMUHP7+H1KLqMMc=",
+			"path": "golang.org/x/text",
+			"revision": "f4905fbd45b6790792202848439271c74074bbfd",
+			"revisionTime": "2019-04-10T00:12:53Z"
+		},
+		{
+			"checksumSHA1": "JN6ERdt08ltY530Djm1QFeTZkCI=",
+			"path": "google.golang.org/appengine",
+			"revision": "b2f4a3cf3c67576a2ee09e1fe62656a5086ce880",
+			"revisionTime": "2019-06-06T17:30:15Z"
+		}
+	],
+	"rootPath": "VideoSpider"
+}
