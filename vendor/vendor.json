@@ -9,6 +9,24 @@
 			"revisionTime": "2019-05-23T15:02:45Z"
 		},
 		{
+			"checksumSHA1": "7Fzuv1LzIgmU4NPFCm1D9Yvo/tk=",
+			"path": "github.com/lxn/walk",
+			"revision": "ab41574a001ad80c2a8e87d2e64dfb18fc9c5e07",
+			"revisionTime": "2019-03-26T16:50:55Z"
+		},
+		{
+			"checksumSHA1": "BcTTiQDxh9UOa2lLAUdLoGaAQrE=",
+			"path": "github.com/lxn/walk/declarative",
+			"revision": "ab41574a001ad80c2a8e87d2e64dfb18fc9c5e07",
+			"revisionTime": "2019-03-26T16:50:55Z"
+		},
+		{
+			"checksumSHA1": "VIV9z0nihxjWUcw17EUeKHRkyYs=",
+			"path": "github.com/lxn/win",
+			"revision": "0040366d745006bbf7528ac96de2de375846aa79",
+			"revisionTime": "2019-03-11T09:34:51Z"
+		},
+		{
 			"checksumSHA1": "WZhkyHxMX6IhAMUHP7+H1KLqMMc=",
 			"path": "golang.org/x/text",
 			"revision": "f4905fbd45b6790792202848439271c74074bbfd",
