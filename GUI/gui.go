@@ -1,11 +1,13 @@
 package GUI
 
 import (
+	"VideoSpider/paraseURL"
 	"fmt"
 	"github.com/lxn/walk"
 	. "github.com/lxn/walk/declarative"
 	"github.com/lxn/win"
 	"log"
+	"strings"
 )
 
 var Te, userId *walk.TextEdit
@@ -20,6 +22,15 @@ type MyMainWindow struct {
 func (mw *MyMainWindow) getUserIdAndOperate() {
 	users := userId.Text()
 	userId.SetText(users + "shoudaoshuju")
+
+	userIds := strings.Split(users,",")
+	//myContext := context.Background()
+
+	fmt.Println(userIds)
+	for _,userId := range userIds{
+		go paraseURL.ParseId(userId)
+	}
+
 }
 
 func UserOperate() {
