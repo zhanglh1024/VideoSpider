@@ -37,6 +37,12 @@
 			"path": "google.golang.org/appengine",
 			"revision": "b2f4a3cf3c67576a2ee09e1fe62656a5086ce880",
 			"revisionTime": "2019-06-06T17:30:15Z"
+		},
+		{
+			"checksumSHA1": "YkiN4GIAur8FvnzjcRBo/WNG2mQ=",
+			"path": "gopkg.in/Knetic/govaluate.v3",
+			"revision": "d216395917cc49052c7c7094cf57f09657ca08a8",
+			"revisionTime": "2017-05-01T02:28:28Z"
 		}
 	],
 	"rootPath": "VideoSpider"

@@ -3,9 +3,13 @@ package main
 import "VideoSpider/GUI"
 
 func main() {
-	//paraseURL.ParseId("59416706")
+
+	//go paraseURL.ParseId("59416706",GUI.Worker)
 	GUI.UserOperate()
+
 }
+
+
 
 
 

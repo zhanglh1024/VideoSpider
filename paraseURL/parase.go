@@ -52,8 +52,6 @@ func ParseId(id string)  {
 	}
 	pageNum := count/10+1
 	for i:=2;i<pageNum;i++{
-		//url = 'http://visitor.fanxing.kugou.com/VServices/Video.OfflineVideoService.getVideoList/'+str(id)+'-'+str(i)+'-0-10/'
-		//url := "http://visitor.fanxing.kugou.com/VServices/Video.OfflineVideoService.getVideoList/"+id+"-1-0-10/"
 		page := strconv.Itoa(i)
 		url = "http://visitor.fanxing.kugou.com/VServices/Video.OfflineVideoService.getVideoList/"+id+"-"+page+"-0-10/"
 		fmt.Println(url)
@@ -63,7 +61,6 @@ func ParseId(id string)  {
 		}
 		ParasResponeData(aim, id)
 	}
-
 
 }
 
@@ -162,5 +159,6 @@ func getVideoAndSave(url, id string)  {
 	if err != nil {
 		panic(err)
 	}
+	defer f.Close()
 	io.Copy(f, res.Body)
 }
