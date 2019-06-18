@@ -51,8 +51,8 @@ func (mw *MyMainWindow) soaringList() {
 
 func (mw *MyMainWindow) dayList() {
 	urls := make([]string, 0)
-
 	strTime := timeText.Text()
+	timeText.SetText(fmt.Sprintf("爬取日期为：%s的视频", strTime))
 	for i := 0; i < 2; i++ {
 		strNum := strconv.Itoa(i)
 		url := "https://fx.service.kugou.com/VServices/Video.OfflineVideoService.getDailyRank/"+strNum+"-"+strTime+"/?jsonpcallback=jsonphttpsfxservicekugoucomVServicesVideoOfflineVideoServicegetDailyRank"+strNum+strTime+"jsonpcallback"
