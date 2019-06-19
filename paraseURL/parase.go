@@ -1,6 +1,8 @@
 package paraseURL
 
 import (
+	"VideoSpider/public"
+	"VideoSpider/public/error_operate"
 	"crypto/md5"
 	"encoding/json"
 	"fmt"
@@ -26,7 +28,7 @@ type Data struct {
 type Respone struct {
 	Status int `json:"status"`
 	Errcode   int `json:"errcode"`
-	Error     string `json:"error"`
+	Error     string `json:"error_operate"`
 	Data     Data `json:"data"`
 }
 
@@ -34,22 +36,23 @@ func ParseId(id string)  {
 	url := "http://visitor.fanxing.kugou.com/VServices/Video.OfflineVideoService.getVideoList/"+id+"-1-0-10/"
 	resContent, err := ParaseURL(url)
 	if err != nil{
-		panic(err)
+		panic(error_operate.NoticeError{"ParaseURL error"})
 	}
 
-	idRegex := regexp.MustCompile(`getVideoList([0-9]+)`)
-	myId := idRegex.FindAllStringSubmatch(resContent, -1)
-	countMatch := regexp.MustCompile(`("count":([0-9]+))`)
+	//idRegex := regexp.MustCompile(`getVideoList(.*?)`)
+	//myId := idRegex.FindAllStringSubmatch(resContent, -1)
+	countMatch := regexp.MustCompile(`("count":(.*?)})`)
 	getCount := countMatch.FindAllStringSubmatch(resContent, -1)
 
-	ParasResponeData(resContent,id)
-
-	//fmt.Println(getCount,len(getCount[0]))
-	fmt.Println(myId,len(myId[0]))
+	fmt.Println(getCount,len(getCount[0]))
+	//fmt.Println(myId,len(myId[0]))
 	count, err := strconv.Atoi(getCount[0][2])
 	if err != nil {
 		panic(err)
 	}
+
+	ParasResponeData(resContent,id)
+
 	pageNum := count/10+1
 	for i:=2;i<pageNum;i++{
 		page := strconv.Itoa(i)
@@ -82,12 +85,19 @@ func ParaseURL(url string) (string, error) {
 }
 
 func ParasResponeData(resContent string,id string)  {
-	title := regexp.MustCompile(`("title":"([a-zA-Z0-9\\]+)")`)
-	hashl := regexp.MustCompile(`("hashValue":"([a-zA-Z0-9|]+)")`)
+	title := regexp.MustCompile(`("title":"(.*?)")`)
+	actor := regexp.MustCompile(`("actor":"(.*?)")`)
+	hashl := regexp.MustCompile(`("hashValue":"(.*?)")`)
 	hashList := hashl.FindAllStringSubmatch(resContent, -1)
 	titleList := title.FindAllStringSubmatch(resContent,-1)
-	fmt.Println(titleList, hashList)
-	for _, v := range hashList{
+	actorList := actor.FindAllStringSubmatch(resContent,-1)
+
+	var myTitle public.MyTitle
+	var myActor public.MyActor
+
+	fmt.Println("the title is :", len(titleList),len(hashList))
+	fmt.Println("actor is:",actorList,len(actorList))
+	for key, v := range hashList{
 		theHash := v[2]
 		if strings.Contains(v[2],"|"){
 			split := strings.Split(v[2],"|")
@@ -102,7 +112,11 @@ func ParasResponeData(resContent string,id string)  {
 		fmt.Println(v[2])
 
 		url :="http://tracker.v.kugou.com/video/query?pid=6&sign="+value+"&hash="+theHash
-		getVideoAndSave(GetVedioPlayAddress(url),id)
+
+		json.Unmarshal([]byte("{"+titleList[key][0]+"}"),&myTitle)
+		json.Unmarshal([]byte("{"+actorList[key][0]+"}"),&myActor)
+
+		getVideoAndSave(GetVedioPlayAddress(url),id,myTitle.Title,myActor.Actor)
 		fmt.Println("url:",url)
 	}
 }
@@ -126,19 +140,16 @@ func GetVedioPlayAddress(utl string) string {
 	if err != nil{
 		panic(err)
 	}
-
-
 	return resContent.Data.Url
 }
 
 //获取视频并保存到本地
-func getVideoAndSave(url, id string)  {
+func getVideoAndSave(url, id, title,actor string)  {
 	//url := "http://fx.v.kugou.com/G127/M07/0B/17/vw0DAFx6mdiAP82TAXAgmN91YYw320.mp4"
 	res, err := http.Get(url)
 	if err != nil {
 		panic(err)
 	}
-
 
 	path := fmt.Sprintf("download/%s",id)
     _,err = os.Stat(path)
@@ -146,15 +157,15 @@ func getVideoAndSave(url, id string)  {
 	if err != nil{
 		os.MkdirAll(path, os.ModePerm)
 	}
+    myName := title+"_"+actor+".mp4"
+    fmt.Println("myName",myName)
+	name := fmt.Sprintf("download/%s/%s",id,myName)
+	//如果文件已经存在就跳过
+	_,err =  os.Stat(name)
+	if err ==nil{
+		return
+	}
 
-	names := strings.Split(url,"/")
-	aimName := names[len(names)-1]
-	strs := strings.Split(aimName, ".")
-	cname := string(strs[0])
-	fmt.Println(cname)
-
-
-	name := fmt.Sprintf("download/%s/%s",id,names[len(names)-1])
 	f, err := os.Create(name)
 	if err != nil {
 		panic(err)

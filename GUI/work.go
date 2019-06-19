@@ -2,6 +2,7 @@ package GUI
 
 import (
 	"VideoSpider/paraseURL"
+	"VideoSpider/public/error_operate"
 	"fmt"
 	"github.com/lxn/walk"
 	"strconv"
@@ -17,9 +18,18 @@ type MyMainWindow struct {
 func (mw *MyMainWindow) getUserIdAndOperate() {
 	users := userId.Text()
 
-	userId.SetText(users + "shoudaoshuju")
+	if users == ""{
+		//userId.SetText("开始运行")
+		return
+	}
 
-	runStopBtn.SetText("停止")
+	if strings.Contains(users,"shoudaoshuju"){
+		panic(error_operate.NoticeError{"传入玩家编号出错"})
+	}
+
+	userId.SetText("")
+
+	runStopBtn.SetText("继续运行")
 
 	userIds := strings.Split(users, ",")
 
@@ -74,6 +84,7 @@ func (mw *MyMainWindow) mouthList() {
 
 func (mw *MyMainWindow) offlinePauseRecover() {
 	//users := userId.Text()
+	mw.Close()
 	userId.SetText("")
 
 }
