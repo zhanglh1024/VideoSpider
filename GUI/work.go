@@ -5,6 +5,7 @@ import (
 	"VideoSpider/public/error_operate"
 	"fmt"
 	"github.com/lxn/walk"
+	"reflect"
 	"strconv"
 	"strings"
 )
@@ -16,6 +17,18 @@ type MyMainWindow struct {
 }
 
 func (mw *MyMainWindow) getUserIdAndOperate() {
+	defer func() {
+		if err := recover(); err != nil {
+			errMsg := ""
+			switch errType := reflect.TypeOf(err); errType {
+			case reflect.TypeOf(error_operate.NoticeError{}):
+				errMsg = err.(error_operate.NoticeError).Error()
+			default:
+				errMsg = "未知错误"
+			}
+			userId.SetText(errMsg)
+		}
+	}()
 	users := userId.Text()
 
 	if users == ""{

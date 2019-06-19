@@ -1,12 +1,10 @@
 package GUI
 
 import (
-	error_oprate "VideoSpider/public/error_operate"
 	"github.com/lxn/walk"
 	. "github.com/lxn/walk/declarative"
 	"github.com/lxn/win"
 	"log"
-	"reflect"
 )
 
 var(
@@ -38,18 +36,6 @@ var Mw = new(MyMainWindow)
 //}
 
 func UserOperate() {
-	defer func() {
-		if err := recover(); err != nil {
-			errMsg := ""
-			switch errType := reflect.TypeOf(err); errType {
-			case reflect.TypeOf(error_oprate.NoticeError{}):
-				errMsg = err.(error_oprate.NoticeError).Error()
-			default:
-				errMsg = "未知错误"
-			}
-			userId.SetText(errMsg)
-		}
-	}()
 	if err := (MainWindow{
 		AssignTo: &Mw.MainWindow,
 		Title:    "酷狗视频爬虫",
