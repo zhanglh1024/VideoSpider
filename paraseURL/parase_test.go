@@ -1,6 +1,7 @@
 package paraseURL
 
 import (
+	"VideoSpider/public"
 	"encoding/json"
 	"fmt"
 	"regexp"
@@ -9,18 +10,6 @@ import (
 	"testing"
 )
 
-type testRespon struct {
-	ServerTime int      `json:"servertime"`
-	Callback   []string `json:"callback"`
-	data       string   `json:"data"`
-	Status     int      `json:"status"`
-	ErrorCode  string   `json:"errorcode"`
-	ErrorNo    int      `json:"errorno"`
-	Code       int      `json:"code"`
-	Msg        string   `json:"msg"`
-	Time       int      `json:"time"`
-	Times      int      `json:"times"`
-}
 
 func TestGetVideoAndSave(t *testing.T) {
 	strNum := "0"
@@ -37,8 +26,8 @@ func TestGetVideoAndSave(t *testing.T) {
 	myAim := aimstr[0]
 	fmt.Println("myAim is ", myAim)
 
-	var aim testRespon
-	err = json.Unmarshal([]byte("{"+myAim+"}"), &aim)
+	var aim public.UrlRespond
+	err = json.Unmarshal([]byte(myAim), &aim)
 	if err != nil {
 		fmt.Println("error_operate is :", err)
 	}

@@ -31,12 +31,12 @@ func (mw *MyMainWindow) getUserIdAndOperate() {
 	}()
 	users := userId.Text()
 
-	if users == ""{
+	if users == "" {
 		//userId.SetText("开始运行")
 		return
 	}
 
-	if strings.Contains(users,"shoudaoshuju"){
+	if strings.Contains(users, "shoudaoshuju") {
 		panic(error_operate.NoticeError{"传入玩家编号出错"})
 	}
 
@@ -48,8 +48,24 @@ func (mw *MyMainWindow) getUserIdAndOperate() {
 
 	fmt.Println(userIds)
 	for _, userId := range userIds {
-		go paraseURL.ParseId(userId)
+		go urlWork(userId)
 	}
+}
+
+func urlWork(MyUserId string) {
+	defer func() {
+		if err := recover(); err != nil {
+			errMsg := ""
+			switch errType := reflect.TypeOf(err); errType {
+			case reflect.TypeOf(error_operate.NoticeError{}):
+				errMsg = err.(error_operate.NoticeError).Error()
+			default:
+				errMsg = "未知错误"
+			}
+			userId.SetText(errMsg)
+		}
+	}()
+	paraseURL.ParseId(MyUserId)
 }
 
 func (mw *MyMainWindow) dynamicList() {
@@ -78,10 +94,10 @@ func (mw *MyMainWindow) dayList() {
 	timeText.SetText(fmt.Sprintf("爬取日期为：%s的视频", strTime))
 	for i := 0; i < 2; i++ {
 		strNum := strconv.Itoa(i)
-		url := "https://fx.service.kugou.com/VServices/Video.OfflineVideoService.getDailyRank/"+strNum+"-"+strTime+"/?jsonpcallback=jsonphttpsfxservicekugoucomVServicesVideoOfflineVideoServicegetDailyRank"+strNum+strTime+"jsonpcallback"
+		url := "https://fx.service.kugou.com/VServices/Video.OfflineVideoService.getDailyRank/" + strNum + "-" + strTime + "/?jsonpcallback=jsonphttpsfxservicekugoucomVServicesVideoOfflineVideoServicegetDailyRank" + strNum + strTime + "jsonpcallback"
 		urls = append(urls, url)
 	}
-	go paraseURL.ParasListUrl(urls,"日榜")
+	go paraseURL.ParasListUrl(urls, "日榜")
 }
 
 func (mw *MyMainWindow) mouthList() {
@@ -89,7 +105,7 @@ func (mw *MyMainWindow) mouthList() {
 	urls := make([]string, 0)
 	for i := 0; i < 2; i++ {
 		strNum := strconv.Itoa(i)
-		url := "https://fx.service.kugou.com/VServices/Video.OfflineVideoService.getMonthRank/"+strNum+"-"+strTime+"/?jsonpcallback=jsonphttpsfxservicekugoucomVServicesVideoOfflineVideoServicegetMonthRank"+strNum+strTime+"jsonpcallback"
+		url := "https://fx.service.kugou.com/VServices/Video.OfflineVideoService.getMonthRank/" + strNum + "-" + strTime + "/?jsonpcallback=jsonphttpsfxservicekugoucomVServicesVideoOfflineVideoServicegetMonthRank" + strNum + strTime + "jsonpcallback"
 		urls = append(urls, url)
 	}
 	go paraseURL.ParasListUrl(urls, "月榜")

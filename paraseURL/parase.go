@@ -39,6 +39,8 @@ func ParseId(id string)  {
 		panic(error_operate.NoticeError{"ParaseURL error"})
 	}
 
+	JudgeForRespond(resContent)
+
 	//idRegex := regexp.MustCompile(`getVideoList(.*?)`)
 	//myId := idRegex.FindAllStringSubmatch(resContent, -1)
 	countMatch := regexp.MustCompile(`("count":(.*?)})`)

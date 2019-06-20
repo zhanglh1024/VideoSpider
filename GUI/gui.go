@@ -136,7 +136,6 @@ func UserOperate() {
 				},
 			},
 
-
 			VSplitter{
 				ColumnSpan: 1,
 				MinSize:    Size{550, 100},
