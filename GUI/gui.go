@@ -3,7 +3,6 @@ package GUI
 import (
 	"github.com/lxn/walk"
 	. "github.com/lxn/walk/declarative"
-	"github.com/lxn/win"
 	"log"
 )
 
@@ -15,32 +14,11 @@ var(
 )
 var Mw = new(MyMainWindow)
 
-//type MyMainWindow struct {
-//	*walk.MainWindow
-//	prevFilePath string
-//	path         string
-//}
-//
-//func (mw *MyMainWindow) getUserIdAndOperate() {
-//	users := userId.Text()
-//	userId.SetText(users + "shoudaoshuju")
-//
-//	userIds := strings.Split(users, ",")
-//	//myContext := context.Background()
-//
-//	fmt.Println(userIds)
-//	for _, userId := range userIds {
-//		go paraseURL.ParseId(userId)
-//	}
-//
-//}
 
 func UserOperate() {
 	if err := (MainWindow{
 		AssignTo: &Mw.MainWindow,
 		Title:    "酷狗视频爬虫",
-		MinSize: Size{720, 540},
-		Size:    Size{800, 600},
 		Layout:  VBox{MarginsZero: true},
 
 		Children: []Widget{
@@ -70,39 +48,17 @@ func UserOperate() {
 							},
 						},
 					},
-					//VSplitter{
-					//	MaxSize: Size{Width: 120, Height: 100},
-					//	Children:[]Widget{
-					//		PushButton{
-					//			Text:    "日榜",
-					//			OnClicked: func() {
-					//				Mw.dayList()
-					//			},
-					//		},
-					//	},
-					//},
-					//VSplitter{
-					//	MaxSize: Size{Width: 120, Height: 50},
-					//	Children:[]Widget{
-					//		PushButton{
-					//			Text:    "周榜",
-					//			OnClicked: func() {
-					//				Mw.mouthList()
-					//			},
-					//		},
-					//	},
-					//},
 				},
 			},
 
 			VSplitter{
 				//ColumnSpan: 1,
-				MaxSize:    Size{550, 10},
+				//MaxSize:    Size{550, 10},
 				Children: []Widget{
 					Label{Text: "输入时间:"},
 					TextEdit{
 						AssignTo: &timeText,
-						MaxSize:  Size{Width: 550, Height: 20},
+						//MaxSize:  Size{Width: 550, Height: 20},
 					},
 				},
 			},
@@ -138,12 +94,12 @@ func UserOperate() {
 
 			VSplitter{
 				ColumnSpan: 1,
-				MinSize:    Size{550, 100},
+				//MinSize:    Size{550, 100},
 				Children: []Widget{
 					Label{Text: "玩家ID:"},
 					TextEdit{
 						AssignTo: &userId,
-						MaxSize:  Size{Width: 100, Height: 40},
+						//MaxSize:  Size{Width: 100, Height: 40},
 					},
 				},
 			},
@@ -178,16 +134,30 @@ func UserOperate() {
 		log.Fatal(err)
 	}
 
-	screenX := int(win.GetSystemMetrics(win.SM_CXSCREEN))
-	screenY := int(win.GetSystemMetrics(win.SM_CYSCREEN))
+	timeText.SetSize(walk.Size{800, 40})
+	userId.SetSize(walk.Size{800, 40})
 
-	if err := Mw.SetBounds(walk.Rectangle{
-		X: (screenX - Mw.MainWindow.Width()) / 2,
-		Y: (screenY - Mw.MainWindow.Height()) / 2,
-	}); err != nil {
-		log.Print(err)
-		return
-	}
+	pushBtn, _:= walk.NewPushButton(Mw)
+	pushBtn.SetText("结速运行")
+	pushBtn.SetSize(walk.Size{90, 50})
+	pushBtn.Clicked().Attach(func() {
+		pushBtn.SetText("运行成功！")
+	})
+
+
+	//screenX := int(win.GetSystemMetrics(win.SM_CXSCREEN))
+	//screenY := int(win.GetSystemMetrics(win.SM_CYSCREEN))
+	//
+	//if err := Mw.SetBounds(walk.Rectangle{
+	//	X: (screenX - Mw.MainWindow.Width()) / 2,
+	//	Y: (screenY - Mw.MainWindow.Height()) / 2,
+	//}); err != nil {
+	//	log.Print(err)
+	//	return
+	//}
+
+
+	Mw.MainWindow.SetSize(walk.Size{1400, 800})
 
 	//pauseRecoverBtn.SetVisible(false)
 	Mw.MainWindow.SetVisible(true)
