@@ -3,63 +3,68 @@ package main
 import (
 	"fmt"
 	"io"
+	"io/ioutil"
 	"net/http"
 	"os"
+	"regexp"
 )
 
+
+var regxStr = `<a href="/song\?id=([0-9]+)">([^<]+)</a>?`
+
 func main() {
-	//resp, err := http.Get("http://music.163.com/song/media/outer/url?id=1364137053.mp3")
-	req,_:=http.NewRequest("GET","https://music.163.com/discover/toplist?id=3778678",nil)
+
+	client := &http.Client{}
+	req, err := http.NewRequest("GET", "https://music.163.com/discover/toplist?id=3778678", nil)
+	if err != nil {
+		fmt.Println("获取热歌榜失败！")
+		return
+	}
 	//设置请求头，防止504
 	//req.Header.Set("Referer", "https://music.163.com/")
 	//req.Header.Set("Host", "music.163.com")
 	//req.Header.Set("User-Agent", "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36")
 	//req.Header.Set("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8")
-
-	resp,err:=http.DefaultClient.Do(req)
-	//resp,err := http.Get("https://music.163.com/#/discover/toplist?id=3778678")
+	resp, err := client.Do(req)
 	defer resp.Body.Close()
-	if err!=nil{
-		panic(err)
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		fmt.Println("获取热歌榜失败！")
+		return
 	}
-	//resp, err := http.Get("https://music.163.com/#/artist?id=6731")
-	//if err != nil {
-	//	panic("request url error!")
-	//}
+	content := string(body)
 
-	//respBytes,_:=ioutil.ReadAll(resp.Body)
-	//defer resp.Body.Close()
-	file,_ := os.Create("doPost.txt")
-	defer file.Close()
-	io.Copy(file,resp.Body)
+	doRegx := regexp.MustCompile(regxStr)
+	fingResult := doRegx.FindAllStringSubmatch(content, -1)
+	fmt.Println("find song result", len(fingResult))
+	count := 0
+	for _,song := range fingResult{
+		if count== 10 {
+			return
+		}
+		DownLoadSong(song[1],song[2])
+		count++
+	}
 
-
-	getResp,_:=http.Get("https://music.163.com/discover/toplist?id=3778678")
-	defer getResp.Body.Close()
-	getFile,_:=os.Create("getFile.txt")
-	defer getFile.Close()
-	io.Copy(getFile,getResp.Body)
-
-
-	//fmt.Println(string(respBytes))
-
-	//doc := soup.HTMLParse(string(respBytes))
-	//links := doc.Find("title")
-	//for link := range links{
-	//
-	//}
-
-
-
-	//file, err := os.Create("don't care.mp3")
-	//defer file.Close()
-	//if err != nil{
-	//	panic("create file error!")
-	//}
-
-	//io.Copy(file,resp.Body)
-	fmt.Println("download file finish")
+	fmt.Println("获取热歌榜成功！")
 }
 
-//http://music.163.com/artist?id=6731
+
+func DownLoadSong(id, name string)  {
+	url := "http://music.163.com/song/media/outer/url?id="+id+".mp3"
+	fmt.Println(url)
+	resp,err  := http.Get(url)
+	defer resp.Body.Close()
+	if err != nil{
+		panic(err)
+	}
+
+	os.Mkdir("song",os.ModeDir)
+	file, err := os.Create("song/"+name+".mp3")
+	defer file.Close()
+	if err != nil{
+		panic(err)
+	}
+	io.Copy(file,resp.Body)
+}
 
