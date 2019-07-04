@@ -10,6 +10,7 @@ var(
 	userId *walk.TextEdit
 	timeText *walk.TextEdit
 	runStopBtn *walk.PushButton
+	pauseStopBtn *walk.PushButton
 	pauseRecoverBtn *walk.PushButton
 )
 var Mw = new(MyMainWindow)
@@ -114,6 +115,16 @@ func UserOperate() {
 								Text:      "退出",
 								AssignTo:  &pauseRecoverBtn,
 								OnClicked: Mw.offlinePauseRecover,
+							},
+						},
+					},
+					VSplitter{
+						MaxSize: Size{90, 50},
+						Children: []Widget{
+							PushButton{
+								Text:      "暂停",
+								AssignTo:  &pauseStopBtn,
+								OnClicked: Mw.offlineStop,
 							},
 						},
 					},
